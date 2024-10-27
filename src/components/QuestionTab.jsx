@@ -434,6 +434,7 @@ const QuestionTab = () => {
                                       size="small"
                                       className="normal-case text-sm font-semibold"
                                       style={{ color: "#4285f4" }}
+                                      onClick={()=>{addAnswer(i)}}
                                     >
                                       <FcRightUp className="border-[2px] border-[#4285f4] p-[2px] mr-2" />{" "}
                                       Answer Key
