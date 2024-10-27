@@ -3,11 +3,13 @@ import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore"
 import { IconButton } from "@mui/material"
 import plusSign from '../images/new-form.png'
 import uuid from "react-uuid"
+import { useNavigate } from "react-router-dom"
 const Template = () => {
-
+ const navigate = useNavigate();
  const handleNewForm = ()=>{
     const id = uuid();
     console.log(id);
+    navigate(`/form/${id}`);
  }
 
   return (
