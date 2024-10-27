@@ -1,6 +1,6 @@
-import { IconButton } from "@mui/material"
-import MenuIcon from "@mui/icons-material/Menu"
 import formimage from "../images/form-image.png"
+import MenuIcon from "@mui/icons-material/Menu"
+import { IconButton } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import AppsIcon from "@mui/icons-material/Apps"
 import {Avatar} from "@mui/material"
@@ -17,7 +17,7 @@ const Header = () => {
             src={formimage}
             alt="form image"
           />
-          <p className="text-slate-700">Forms</p>
+          <p className="text-slate-700 font-semibold text-2xl">Forms</p>
         </div>
         <div className="bg-slate-100 p-3 rounded-lg flex items-center">
           <input
