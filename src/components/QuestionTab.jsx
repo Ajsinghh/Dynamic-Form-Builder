@@ -18,263 +18,128 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Button from "@mui/material/Button";
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import {BsTrash} from "react-icons/bs"
-import {BsFileText} from "react-icons/bs"
-import {FcRightUp} from "react-icons/fc"
+import { BsSnapchat, BsTrash } from "react-icons/bs";
+import { BsFileText } from "react-icons/bs";
+import { FcRightUp } from "react-icons/fc";
 import { useState } from "react";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import "./QuestionTab.css";
+
 const QuestionTab = () => {
-    const [questions, setQuestions] = useState(
-        [
-            {
-                questionText: "which is capital of haryana",
-                questionType: "radio",
-                options: [
-                    {optionText: "jind"},
-                    {optionText: "rohtak"},
-                    {optionText: "gurugao"},
-                    {optionText: "chandigarh"},
-                ],
-                open: true,
-                required:false
-            }
-        ]
-    )
+  const [questions, setQuestions] = useState([
+    {
+      questionText: "which is capital of haryana",
+      questionType: "radio",
+      options: [
+        { optionText: "jind" },
+        { optionText: "rohtak" },
+        { optionText: "gurugao" },
+        { optionText: "chandigarh" },
+      ],
+      open: true,
+      required: false,
+    },
+  ]);
 
-    const changeQuestion = (text, i)=>{
-       var newQuestion = [...questions];
-       newQuestion[i].questionText = text;
-       setQuestions(newQuestion);
+  const changeQuestion = (text, i) => {
+    var newQuestion = [...questions];
+    newQuestion[i].questionText = text;
+    setQuestions(newQuestion);
+  };
+
+  const addQuestionType = (i, type) => {
+    let qs = [...questions];
+    console.log(qs);
+    qs[i].questionType = type;
+    setQuestions(qs);
+  };
+
+  const changeOptionValue = (text, i, j) => {
+    var optionsQuestion = [...questions];
+    optionsQuestion[i].options[j].optionText = text;
+    setQuestions(optionsQuestion);
+  };
+
+  const removeOption = (i, j) => {
+    var removeOptionQuestion = [...questions];
+    if (removeOptionQuestion[i].options.length > 1) {
+      removeOptionQuestion[i].options.splice(j, 1);
+      setQuestions(removeOptionQuestion);
     }
+  };
 
-    const addQuestionType = (i, type)=>{
-       let qs = [...questions];
-       console.log(qs);
-       qs[i].questionType = type;
-       setQuestions(qs);
+  const addOption = (i) => {
+    var optionsOfQuestion = [...questions];
+    if (optionsOfQuestion[i].options.length < 5) {
+      optionsOfQuestion[i].options.push({
+        optionText: "Option" + (optionsOfQuestion[i].options.length + 1),
+      });
+    } else {
+      console.log("Max 5 option");
     }
+    setQuestions(optionsOfQuestion);
+  };
 
-    const changeOptionValue = (text, i , j)=>{
-      var optionsQuestion = [...questions];
-      optionsQuestion[i].options[j].optionText = text;
-      setQuestions(optionsQuestion);
-    } 
+  const copyQuestion = (i) => {
+    let qs = [...questions];
+    var newQuestion = qs[i];
+    setQuestions([...questions, newQuestion]);
+  };
+  const deleteQuestion = (i) => {
+    let qs = [...questions];
+    if (questions.length > 1) {
+      qs.splice(i, 1);
+    }
+    setQuestions(qs);
+  };
 
-   const questionsUI = ()=>{
-       return questions.map((ques, i) => (
-         <div key={i} className="border-l-4 border-l-sky-500">
-           <Accordion
-             expanded={ques.open}
-             className={ques.open ? "border" : ""}
-           >
-             <AccordionSummary
-               aria-controls="panelia-content"
-               id="panelia-header"
-               elevation={1}
-               style={{ width: "100% " }}
-             >
-               {!questions[i].open ? (
-                 <div className="saved-question">
-                   <Typography
-                     style={{
-                       fontSize: "15px",
-                       fontWeight: "400",
-                       letterSpacing: ".1px",
-                       lineHeight: "24px",
-                       paddingBottom: "8px",
-                     }}
-                   >
-                     {i + 1}.{questions[i].questionText}
-                   </Typography>
-                   {ques.options.map((op, j) => (
-                     <div key={j}>
-                       <div className="flex">
-                         <FormControlLabel
-                           className="ml-1 mb-1"
-                           disabled
-                           control={
-                             <input
-                               type={ques.questionType}
-                               color="primary"
-                               className="mr-1"
-                               required={ques.type}
-                             />
-                           }
-                           label={
-                             <Typography
-                               className="font-serif text-sm font-normal leading-5 "
-                               style={{
-                                 letterSpacing: ".2px",
-                                 color: "#202124",
-                               }}
-                             >
-                               {ques.options[j].optionText}
-                             </Typography>
-                           }
-                         />
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-               ) : (
-                 ""
-               )}
-             </AccordionSummary>
-             <div className="question-boxes flex flex-row justify-center">
-               <AccordionDetails className="add-question bg-white  rounded-lg px-6 py-5 capitalize flex flex-col pt-0 ml-2 w-11/12">
-                 <div className="add-question-top flex justify-between items-center">
-                   <input
-                     type="text"
-                     className="question box-border mt-2 font-sans text-base font-normal flex-1 leading-3 w-2/5 border-none outline-none text-black h-10 mr-2 p-2 focus:border-b-[1px] focus:border-b-[#673AB7] focus:bg-[#f4f4f9]"
-                     placeholder="Question"
-                     onChange={(e)=>{changeQuestion(e.target.value , i)}}
-                     value={ques.questionText}
-                   />
-                   <CropOriginalIcon style={{ color: "#5f6368" }} />
-                   <Select
-                     className="h-10 w-56 border  border-b-2 border-[#f4f4f9] rounded-sm bg-transparent px-1 py-4 text-black mx-2 "
-                     style={{ color: "#5f6368", fontSize: "13px" }}
-                   >
-                     <MenuItem
-                       style={{ color: "rgba(118, 118, 118, 0.3)" }}
-                       id="text"
-                       value="Text"
-                       onClick={()=>{addQuestionType(i,'text')}}
-                     >
-                       <SubjectIcon className="mr-3" /> Paragraph
-                     </MenuItem>
-                     <MenuItem
-                       style={{ color: "rgba(118, 118, 118, 0.3)" }}
-                       id="checkbox"
-                       value="Checkbox"
-                       onClick={()=>{addQuestionType(i,'checkbox')}}
-                     >
-                       <CheckBoxIcon
-                         style={{ color: "#70757a" }}
-                         className="mr-3"
-                         checked
-                       />{" "}
-                       Checkboxes
-                     </MenuItem>
-                     <MenuItem
-                       style={{ color: "rgba(118, 118, 118, 0.3)" }}
-                       id="radio"
-                       value="Radio"
-                       onClick={()=>{addQuestionType(i,'radio')}}
-                     >
-                       <Radio
-                         style={{ color: "#70757a" }}
-                         className="mr-3"
-                         checked
-                       />{" "}
-                       Multiple Choice
-                     </MenuItem>
-                   </Select>
-                 </div>
-                 {ques.options.map((op, j) => (
-                   <div className="add-question-body flex items-center" key={j}>
-                     {ques.questionType != "text" ? (
-                       <input type={ques.questionType} className="mr-3" />
-                     ) : (
-                       <ShortTextIcon style={{ color: "#5f6368" }} />
-                     )}
-                     <div>
-                       <input
-                         type="text"
-                         className="text-input outline-none border-none h-10 w-[490px] font-sans text-sm font-normal focus:border-b-[1.5px] focus:border-b-purple-700"
-                         style={{ letterSpacing: ".2px", color: "#202124" }}
-                         placeholder="option"
-                         value={ques.options[j].optionText}
-                         onChange={(e)=>{changeOptionValue(e.target.value, i , j)}}
-                       />
-                     </div>
-                     <CropOriginalIcon style={{ color: "#5f6369" }} />
-                     <IconButton aria-label="delete">
-                       <CloseIcon />
-                     </IconButton>
-                   </div>
-                 ))}
-                 {ques.options.length < 5 ? (
-                   <div className="add_question_body flex items-center">
-                     <FormControlLabel
-                       disabled
-                       control={
-                         ques.questionType != "text" ? (
-                           <input
-                             type={ques.questionType}
-                             color="primary"
-                             aria-label="secondary checkbox"
-                             className="mx-3"
-                             disabled
-                           />
-                         ) : (
-                           <ShortTextIcon className="mr-3" />
-                         )
-                       }
-                       label={
-                         <div>
-                           <input
-                             type="text"
-                             className="text-input outline-none border-none h-10  font-sans  font-normal focus:border-b-[1.5px] focus:border-b-purple-700 text-sm w-20"
-                             placeholder="Add Other"
-                           />
-                           <Button
-                             size="small"
-                             className="transform-none text-sm font-bold"
-                             style={{ color: "#4285f4" }}
-                           >
-                             Add Option
-                           </Button>
-                         </div>
-                       }
-                     />
-                   </div>
-                 ) : (
-                   ""
-                 )}
-                 <div className="add_footer flex items-center justify-between">
-                   <div className="add-question-bottom-left mt-3 border-t-2 flex justify-end items-center ">
-                     <Button
-                       size="small"
-                       className="normal-case text-sm font-semibold"
-                       style={{ color: "#4285f4" }}
-                     >
-                       <FcRightUp className="border-[2px] border-[#4285f4] p-[2px] mr-2" />{" "}
-                       Answer Key
-                     </Button>
-                   </div>
-                   <div className="add_question_bottom mt-3 border-t-2 flex justify-end items-center">
-                     <IconButton aria-label="copy">
-                       <FilterNoneIcon />
-                     </IconButton>
-                     <IconButton aria-label="delete">
-                       <BsTrash />
-                     </IconButton>
-                     <span className="text-sm" style={{ color: "#5f6368" }}>
-                       Required{" "}
-                       <Switch
-                         name="checkedA"
-                         color="primary"
-                         checked={false}
-                       />{" "}
-                     </span>
-                     <IconButton>
-                       <MoreVertIcon />
-                     </IconButton>
-                   </div>
-                 </div>
-               </AccordionDetails>
-               <div className="question_edit">
-                 <AddCircleOutlineIcon className="edit" fontSize="large" />
-                 <OnDemandVideoIcon className="edit" fontSize="large" />
-                 <CropOriginalIcon className="edit" fontSize="large" />
-                 <TextFieldsIcon className="edit" fontSize="large" />
-               </div>
-             </div>
-           </Accordion>
-         </div>
-       ));
-   }
+  const requiredQuestion = (i) => {
+    var reqQuestion = [...questions];
+    reqQuestion[i].required = !reqQuestion[i].required;
+    setQuestions(reqQuestion);
+  };
+
+  const addMoreQuestionField = () => {
+    setQuestions([
+      ...questions,
+      {
+        questionText: "Question",
+        questionType: "radio",
+        options: [{ optionText: "Option 1" }],
+        open: true,
+        required: false,
+      },
+    ]);
+  };
+
+  const onDragEnd = (result)=>{
+     if(result.destination){
+        return;
+     }
+     var itemgg = [...questions];
+     const itemF = reorder(
+        itemgg,
+        result.source.index,
+        result.destination.index
+     )
+     setQuestions(itemF)
+  }
+
+  const reorder = (list,startIndex,endIndex)=>{
+     const result = Array.from(list);
+     const [removed] = result.splice(startIndex,1);
+     result.splice(endIndex, 0 , removed);
+     return result
+  }
+
+  const questionsUI = () => {
+    return questions.map((ques, i) => (
+        <Draggable key={i} draggableId={i + 'id'} index={i}>
+            {(prov)}
+        </Draggable>
+    ));
+  };
 
   return (
     <div>
@@ -300,7 +165,16 @@ const QuestionTab = () => {
               />
             </div>
           </div>
-          {questionsUI()}
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable">
+              {(provided, snapshot) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                    {questionsUI()}
+                    {provided.placeholder}
+                    </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
     </div>
